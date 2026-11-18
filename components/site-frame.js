@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CartProvider, formatRupiah, useCart } from "./cart-provider";
 import { menuItems, navLinks, plans } from "../app/data";
@@ -68,12 +68,12 @@ function CartDrawer() {
     };
   }, [cartOpen, closeCart]);
 
-  function simulateCheckout() {
-    if (!cart.length) return "Keranjang kosong. Tambahkan menu atau paket terlebih dahulu.";
-    if (!canCalculate) return "Pilih menu untuk setiap paket agar total dapat dihitung.";
-    return "Simulasi selesai. Tidak ada pesanan atau pembayaran yang diproses.";
+  const router = useRouter();
+
+  function lanjutCheckout() {
+    closeCart();
+    router.push("/checkout");
   }
-  const [checkoutStatus, setCheckoutStatus] = useState("");
 
   return (
     <>
@@ -199,7 +199,7 @@ function CartDrawer() {
             <div><span>Diskon paket</span><strong>−{formatRupiah(totals.discount)}</strong></div>
             <div><span>Ongkir</span><strong>{formatRupiah(delivery === "boarding-house" ? 2000 : 0)}</strong></div>
             <div className="cart-total">
-              <span>Total simulasi</span>
+              <span>Total</span>
               <strong>{canCalculate
                 ? formatRupiah(totals.subtotal - totals.discount + (delivery === "boarding-house" ? 2000 : 0))
                 : "Pilih menu paket"}</strong>
@@ -208,18 +208,16 @@ function CartDrawer() {
           {!canCalculate && (
             <p className="cart-feedback" role="status">Pilih menu setiap paket agar total dapat dihitung.</p>
           )}
-          <p className="cart-demo-note">Keranjang ini hanya tersimpan di browser dan belum memproses pesanan.</p>
-        </div>
+            <p className="cart-demo-note">Pesanan dikonfirmasi admin lewat WhatsApp setelah kamu kirim di halaman checkout.</p>         </div>
         <div className="drawer-footer">
           <button
             className="btn btn-terra"
             type="button"
             disabled={!ready || !cart.length || !canCalculate}
-            onClick={() => setCheckoutStatus(simulateCheckout())}
+             onClick={lanjutCheckout}
           >
-            Cek simulasi
+            Lanjut ke checkout
           </button>
-          <p className="checkout-status" role="status" aria-live="polite">{checkoutStatus}</p>
         </div>
       </aside>
     </>
@@ -246,9 +244,6 @@ function SiteContents({ children }) {
   return (
     <>
       <a className="skip-link" href="#main">Lewati ke konten</a>
-      <div className="demo-banner" role="note">
-        Prototipe tugas mata kuliah Technopreneurship, Universitas Negeri Semarang. Belum melayani pesanan.
-      </div>
       <header className="site-header">
         <div className="container nav-wrap">
           <Link className="brand-logo" href="/" prefetch={false}>
@@ -308,7 +303,7 @@ function SiteContents({ children }) {
           <nav className="footer-links" aria-label="Tautan halaman">
             {navLinks.slice(1).map((link) => <Link href={link.href} prefetch={false} key={link.href}>{link.label}</Link>)}
           </nav>
-          <p className="footer-note">Checkout hanya simulasi. Tidak ada pesanan atau pembayaran yang diproses.</p>
+          <p className="footer-note">Pesanan dikonfirmasi lewat WhatsApp admin. Pembayaran dilakukan setelah konfirmasi.</p>
           <p className="photo-credit">Foto makanan stand-in dari <a href="https://unsplash.com/license" rel="noreferrer">Unsplash</a>.</p>
         </div>
       </footer>

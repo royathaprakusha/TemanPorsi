@@ -171,6 +171,11 @@ export function CartProvider({ children }) {
       .concat(duplicate ? [] : [{ ...chosen, id: nextId, productId }]));
   }, [cart, updateCart]);
 
+  const clearCart = useCallback(() => {
+    setAllowSave(true);
+    setCart([]);
+  }, []);
+
   const chooseDelivery = useCallback((value) => {
     if (value !== "meeting-point" && value !== "boarding-house") return;
     setAllowSave(true);
@@ -184,6 +189,7 @@ export function CartProvider({ children }) {
   }, []);
 
   const value = useMemo(() => ({
+    clearCart,
     cart,
     cartOpen,
     closeCart,
@@ -199,7 +205,7 @@ export function CartProvider({ children }) {
     storageError,
     ready
   }), [
-    cart, cartOpen, closeCart, openCart, addMenu, addPackage,
+    clearCart, cart, cartOpen, closeCart, openCart, addMenu, addPackage,
     changeQuantity, choosePackageMenu, delivery, chooseDelivery,
     slot, chooseSlot, storageError, ready
   ]);

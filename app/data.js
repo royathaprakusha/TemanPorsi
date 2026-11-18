@@ -72,6 +72,8 @@ export const navLinks = [
   { href: "/menu", label: "Menu" },
   { href: "/jadwal", label: "Jadwal" },
   { href: "/langganan", label: "Paket" },
-  { href: "/perbandingan", label: "Info Pemesanan" },
-  { href: "/testimoni", label: "Tentang Kami" }
+    { href: "/perbandingan", label: "Info Pemesanan" },
+  { href: "/testimoni", label: "Tentang Kami" },
+  { href: "/antar", label: "Info Pengantaran" },
+  { href: "/cek", label: "Cek Pesanan" },
 ];
